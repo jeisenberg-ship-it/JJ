@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>J&amp;J · Vision Client — l'IA au service de votre écosystème de santé</title>
+<style>
+  :root {
+    --sf-cloud-blue-90: #CFE9FE;
+    --sf-cloud-blue-68: #00B3FF;
+    --sf-electric-50: #066AFE;
+    --sf-electric-30: #022AC0;
+    --sf-electric-20: #002775;
+    --sf-white: #FFFFFF;
+    --sf-card-border-on-white: #E0E5EC;
+    --title-font: 'Avant Garde Demi SFDC', 'Century Gothic', Futura, sans-serif;
+    --body-font: 'Salesforce Sans', 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body { height: 100%; }
+  body { font-family: var(--body-font); color: var(--sf-electric-20); background: var(--sf-cloud-blue-90); }
+
+  .skip-link { position: absolute; left: 8px; top: -48px; background: var(--sf-electric-20); color: #fff; padding: 10px 16px; border-radius: 8px; z-index: 999; text-decoration: none; transition: top 0.15s; }
+  .skip-link:focus { top: 8px; }
+
+  #deck { height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+
+  .slide { height: 100vh; scroll-snap-align: start; display: grid; padding: 56px 88px; position: relative; }
+  .slide-safe { height: 100%; display: grid; gap: 24px; }
+  .slide.light { background: var(--sf-cloud-blue-90); }
+  .slide.white { background: var(--sf-white); }
+
+  .hero-centered      { grid-template-rows: 1fr auto auto 1fr auto; justify-items: center; text-align: center; }
+  .title-top-body-mid { grid-template-rows: auto minmax(0,1fr) auto; }
+
+  h1 { font-family: var(--title-font); font-weight: 600; font-size: 54px; line-height: 1.1; color: var(--sf-electric-20); }
+  h2 { font-family: var(--title-font); font-weight: 600; font-size: 38px; line-height: 1.15; color: var(--sf-electric-20); }
+  h3 { font-family: var(--title-font); font-weight: 600; font-size: 22px; line-height: 1.25; }
+  p  { font-size: 22px; line-height: 1.5; }
+  .lead { font-size: 25px; line-height: 1.45; color: var(--sf-electric-30); }
+  .eyebrow { font-family: var(--body-font); font-size: 14px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--sf-electric-50); }
+  strong { font-weight: 700; }
+  em { font-style: italic; }
+  .sf-highlight { color: var(--sf-electric-50); font-weight: 700; }
+
+  .slide-footer { grid-row: -1; display: flex; align-items: center; justify-content: space-between; font-size: 16px; color: var(--sf-electric-30); border-top: 1px solid var(--sf-card-border-on-white); padding-top: 14px; }
+  .slide-footer .brand { font-weight: 700; letter-spacing: 0.04em; }
+  .slide-footer .logo-dot { color: var(--sf-cloud-blue-68); }
+
+  .sf-hero-media { position: relative; overflow: hidden; display: grid; place-items: center; text-align: center; padding: 0; }
+  .sf-hero-media .overlay { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(0,39,117,0.95) 0%, rgba(2,42,192,0.85) 55%, rgba(6,106,254,0.75) 100%); z-index: 1; }
+  .sf-hero-media .content { position: relative; z-index: 2; max-width: 1040px; padding: 0 64px; }
+  .sf-hero-media h1 { color: var(--sf-white); text-shadow: 0 2px 16px rgba(0,0,0,0.35); font-size: 58px; }
+  .sf-hero-media .eyebrow { color: var(--sf-cloud-blue-68); margin-bottom: 22px; }
+  .sf-hero-media .lead { color: rgba(255,255,255,0.9); margin-top: 24px; font-size: 25px; }
+  .sf-hero-media .hero-footer { position: absolute; bottom: 40px; left: 0; right: 0; z-index: 2; color: rgba(255,255,255,0.62); font-size: 16px; text-align: center; }
+  .sf-hero-media .orb { position: absolute; border-radius: 50%; z-index: 0; filter: blur(2px); opacity: 0.5; }
+  .sf-hero-media .orb.a { width: 340px; height: 340px; background: radial-gradient(circle at 30% 30%, #00B3FF 0%, rgba(0,179,255,0) 70%); top: -80px; right: -60px; }
+  .sf-hero-media .orb.b { width: 280px; height: 280px; background: radial-gradient(circle at 50% 50%, #066AFE 0%, rgba(6,106,254,0) 70%); bottom: -70px; left: -50px; }
+
+  .cover-split { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 48px; align-items: center; text-align: left; max-width: 1180px; }
+  .cover-split .content { max-width: none; padding: 0; text-align: left; }
+  .cover-split .compass-wrap { display: grid; place-items: center; }
+  .compass { width: 100%; max-width: 380px; height: auto; }
+
+  .sf-statement { display: grid; place-items: center; text-align: center; padding: 0 6%; }
+  .sf-statement p { font-size: 36px; line-height: 1.48; color: var(--sf-electric-20); max-width: 1180px; font-family: var(--title-font); font-weight: 600; }
+  .sf-statement .sub { font-family: var(--body-font); font-weight: 400; font-size: 22px; color: var(--sf-electric-30); max-width: 940px; margin-top: 28px; }
+
+  .sf-chip { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 4px 12px; border-radius: 50px; width: fit-content; }
+  .sf-chip-primary { background: #CFE9FE; color: var(--sf-electric-30); }
+  .chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  .axis-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 48px; align-items: center; align-self: center; width: 100%; }
+  .axis-grid.flip { grid-template-columns: 1.1fr 0.9fr; }
+  .frame { aspect-ratio: 16/10; border-radius: 14px; overflow: hidden; }
+  .demo-ph { width: 100%; height: 100%; border: 2px dashed var(--sf-electric-50); border-radius: 14px; background: repeating-linear-gradient(45deg, rgba(6,106,254,0.04) 0 14px, rgba(6,106,254,0.09) 14px 28px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; text-align: center; padding: 24px; }
+  .demo-ph .play { width: 60px; height: 60px; border-radius: 50%; background: var(--sf-electric-50); display: grid; place-items: center; }
+  .demo-ph .play svg { width: 26px; height: 26px; fill: #fff; }
+  .demo-ph .demo-label { font-family: var(--body-font); font-size: 15px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--sf-electric-30); }
+  .demo-ph .demo-hint { font-size: 14px; color: var(--sf-electric-30); opacity: 0.82; max-width: 260px; }
+
+  .axis-copy .block { margin-top: 20px; }
+  .axis-copy .k { font-family: var(--body-font); font-size: 13px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--sf-electric-50); display: block; margin-bottom: 4px; }
+  .axis-copy .block p { font-size: 20px; line-height: 1.5; color: var(--sf-electric-30); }
+  .axis-copy .chip-row { margin-top: 6px; }
+
+  .cog-band { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; align-self: center; width: 100%; }
+  .cog-card { background: var(--sf-white); border: 1px solid var(--sf-card-border-on-white); border-radius: 16px; padding: 26px; box-shadow: 0 4px 12px rgba(6,106,254,0.12); display: flex; flex-direction: column; gap: 12px; }
+  .cog-card .icon { width: 44px; height: 44px; border-radius: 10px; background: #CFE9FE; display: grid; place-items: center; }
+  .cog-card .icon svg { width: 26px; height: 26px; stroke: var(--sf-electric-50); fill: none; }
+  .cog-card h3 { color: var(--sf-electric-20); font-size: 18px; }
+  .cog-card p { font-size: 15px; line-height: 1.45; color: var(--sf-electric-30); }
+
+  blockquote { border-left: 5px solid var(--sf-electric-50); padding: 8px 0 8px 28px; font-family: var(--title-font); font-weight: 600; font-size: 26px; line-height: 1.4; color: var(--sf-electric-20); align-self: center; }
+
+  .compass .ring { fill: none; stroke: rgba(255,255,255,0.35); }
+  .compass .tick { stroke: rgba(255,255,255,0.5); }
+  .compass .needle-n { fill: var(--sf-cloud-blue-68); }
+  .compass .needle-s { fill: rgba(255,255,255,0.3); }
+  .compass .node { fill: rgba(255,255,255,0.12); stroke: var(--sf-cloud-blue-68); }
+  .compass .node-ic { stroke: #fff; fill: none; }
+  .compass .lbl { fill: #fff; font-family: var(--body-font); font-weight: 700; font-size: 13px; letter-spacing: 0.04em; }
+  .compass .lbl-n { fill: var(--sf-cloud-blue-68); font-family: var(--title-font); font-weight: 600; font-size: 15px; }
+  .compass .hub { fill: var(--sf-white); }
+  .compass .hub-t { fill: var(--sf-electric-20); font-family: var(--title-font); font-weight: 600; font-size: 12px; }
+
+  #nav-rail { position: fixed; right: 28px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 14px; z-index: 50; }
+  #nav-rail a { width: 12px; height: 12px; border-radius: 50%; background: rgba(0,39,117,0.25); border: none; cursor: pointer; transition: background 0.2s, transform 0.2s; display: block; }
+  #nav-rail a:hover { transform: scale(1.25); }
+  #nav-rail a[aria-current="true"] { background: var(--sf-electric-50); transform: scale(1.3); }
+
+  @media print {
+    @page { size: A4 landscape; margin: 0; }
+    html, body { margin: 0; padding: 0; }
+    body { overflow: visible; }
+    #deck { overflow: visible; height: auto; min-height: auto; scroll-snap-type: none; }
+    .slide { height: 210mm; min-height: 210mm; break-after: page; break-inside: avoid; scroll-snap-align: none; overflow: hidden; padding: 40px 56px; }
+    .slide-safe { height: 100%; min-height: auto; }
+    .slide:last-child { break-after: auto; }
+    #nav-rail { display: none; }
+    .skip-link { display: none; }
+  }
+
+  @media (max-width: 1100px) {
+    .slide { padding: 40px 40px; }
+    .cover-split, .axis-grid, .axis-grid.flip { grid-template-columns: 1fr; gap: 28px; }
+    .cog-band { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<a href="#s1" class="skip-link">Aller au contenu</a>
+
+<main id="deck">
+
+  <!-- SLIDE 1 · Cover + boussole -->
+  <section class="slide sf-hero-media" id="s1" role="region" aria-label="Vision Client : l'humain au nord de la boussole" tabindex="-1">
+    <div class="overlay"></div>
+    <span class="orb a" aria-hidden="true"></span>
+    <span class="orb b" aria-hidden="true"></span>
+    <div class="content cover-split">
+      <div class="content">
+        <p class="eyebrow">Direction Stratégie Client · Session IA · 13 octobre 2026</p>
+        <h1>L'humain au nord de la boussole</h1>
+        <p class="lead">L'IA n'automatise pas des tâches — elle transforme l'expérience de chacun de vos clients : établissements, professionnels de santé, patients.</p>
+      </div>
+      <div class="compass-wrap">
+        <svg class="compass" viewBox="0 0 400 400" role="img" aria-label="Boussole Vision Client : l'humain au nord, trois axes Institution, Professionnel et Patient">
+          <circle class="ring" cx="200" cy="200" r="150" stroke-width="2"/>
+          <circle class="ring" cx="200" cy="200" r="120" stroke-width="1" stroke-dasharray="3 6"/>
+          <line class="tick" x1="200" y1="42" x2="200" y2="60" stroke-width="2"/>
+          <line class="tick" x1="200" y1="340" x2="200" y2="358" stroke-width="2"/>
+          <line class="tick" x1="42" y1="200" x2="60" y2="200" stroke-width="2"/>
+          <line class="tick" x1="340" y1="200" x2="358" y2="200" stroke-width="2"/>
+          <polygon class="needle-n" points="200,90 214,200 200,186 186,200"/>
+          <polygon class="needle-s" points="200,310 214,200 200,214 186,200"/>
+          <g transform="translate(200,58)">
+            <circle class="node" cx="0" cy="0" r="26" stroke-width="2"/>
+            <g class="node-ic" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="0" cy="-7" r="6"/>
+              <path d="M-11 14c0-7 5-12 11-12s11 5 11 12"/>
+            </g>
+          </g>
+          <text class="lbl-n" x="200" y="18" text-anchor="middle">L'HUMAIN</text>
+          <g transform="translate(58,200)">
+            <circle class="node" cx="0" cy="0" r="24" stroke-width="2"/>
+            <g class="node-ic" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M-11 12V-2l11-8 11 8v14z"/>
+              <path d="M-4 12V4h8v8"/>
+            </g>
+          </g>
+          <text class="lbl" x="58" y="242" text-anchor="middle">Institution</text>
+          <g transform="translate(342,200)">
+            <circle class="node" cx="0" cy="0" r="24" stroke-width="2"/>
+            <g class="node-ic" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M-2 -11h4v5h5v4h-5v5h-4v-5h-5v-4h5z"/>
+            </g>
+          </g>
+          <text class="lbl" x="342" y="242" text-anchor="middle">Professionnel</text>
+          <g transform="translate(200,342)">
+            <circle class="node" cx="0" cy="0" r="24" stroke-width="2"/>
+            <g class="node-ic" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M0 12c-7-5-11-9-11-15 0-4 3-6 6-6 2 0 4 1 5 3 1-2 3-3 5-3 3 0 6 2 6 6 0 6-4 10-11 15z"/>
+            </g>
+          </g>
+          <text class="lbl" x="200" y="384" text-anchor="middle">Patient</text>
+          <circle class="hub" cx="200" cy="200" r="34"/>
+          <text class="hub-t" x="200" y="197" text-anchor="middle">VISION</text>
+          <text class="hub-t" x="200" y="211" text-anchor="middle">CLIENT</text>
+        </svg>
+      </div>
+    </div>
+    <p class="hero-footer">Johnson &amp; Johnson Innovative Medicine &nbsp;·&nbsp; Salesforce</p>
+  </section>
+
+  <!-- SLIDE 2 · Intro statement -->
+  <section class="slide white hero-centered" id="s2" role="region" aria-label="Nous ne sommes pas venus vous parler de technologie" tabindex="-1">
+    <p class="eyebrow" style="grid-row:2;">L'introduction</p>
+    <div class="sf-statement" style="grid-row:3;">
+      <p>Nous ne sommes pas venus vous parler de technologie, ni de vos structures internes. Nous sommes venus vous parler de <span class="sf-highlight">vos clients.</span></p>
+      <p class="sub">Les établissements sous pression budgétaire, les soignants qui manquent de temps, et — au bout de la chaîne — le patient. Voyons comment l'IA transforme concrètement leur quotidien à vos côtés.</p>
+    </div>
+    <div class="slide-footer" style="grid-row:-1; width:100%;"><span class="brand">salesforce<span class="logo-dot">.</span></span><span>J&amp;J · DSC — Vision Client</span></div>
+  </section>
+
+  <!-- SLIDE 3 · Axe Institutionnel -->
+  <section class="slide light title-top-body-mid" id="s3" role="region" aria-label="Axe institutionnel : simplifier la vie de l'établissement" tabindex="-1">
+    <div class="slide-safe">
+      <div>
+        <p class="eyebrow">Axe 1 · L'institution</p>
+        <h2>Simplifier la vie de l'établissement</h2>
+      </div>
+      <div class="axis-grid">
+        <div class="frame">
+          <!-- TODO Jerome : capture/vidéo démo — IA qui pré-rédige une réponse à appel d'offres -->
+          <div class="demo-ph" role="img" aria-label="Emplacement démo : réponse assistée aux appels d'offres">
+            <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+            <span class="demo-label">Démo · Appel d'offres assisté</span>
+            <span class="demo-hint">L'IA analyse le cahier des charges et pré-rédige une réponse conforme</span>
+          </div>
+        </div>
+        <div class="axis-copy">
+          <div class="chip-row">
+            <span class="sf-chip sf-chip-primary">Groupements d'achats</span>
+            <span class="sf-chip sf-chip-primary">Pharmacie hospitalière</span>
+            <span class="sf-chip sf-chip-primary">Directions</span>
+          </div>
+          <div class="block">
+            <span class="k">Leur quotidien</span>
+            <p>Une exigence de conformité absolue et des appels d'offres qui demandent des jours de va-et-vient. Pour eux, un bon partenaire est réactif et irréprochable.</p>
+          </div>
+          <div class="block">
+            <span class="k">Ce que l'IA change</span>
+            <p>Elle analyse les cahiers des charges complexes et <strong>pré-rédige un premier jet précis</strong> — la conformité restant validée par vos équipes.</p>
+          </div>
+          <div class="block">
+            <span class="k">L'impact pour le client</span>
+            <p>L'établissement reçoit des propositions sur-mesure <strong>nettement plus vite</strong>, dans le strict respect des processus. Vous devenez le fournisseur le plus fluide de leur écosystème.</p>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer"><span class="brand">salesforce<span class="logo-dot">.</span></span><span>J&amp;J · DSC — Vision Client</span></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 4 · Axe Professionnel -->
+  <section class="slide white title-top-body-mid" id="s4" role="region" aria-label="Axe professionnel : valoriser le temps des soignants" tabindex="-1">
+    <div class="slide-safe">
+      <div>
+        <p class="eyebrow">Axe 2 · Le professionnel de santé</p>
+        <h2>Valoriser le temps des soignants</h2>
+      </div>
+      <div class="axis-grid flip">
+        <div class="axis-copy">
+          <div class="chip-row">
+            <span class="sf-chip sf-chip-primary">HCP — médecins, infirmiers</span>
+            <span class="sf-chip sf-chip-primary">Événements</span>
+            <span class="sf-chip sf-chip-primary">KAM</span>
+          </div>
+          <div class="block">
+            <span class="k">Leur quotidien</span>
+            <p>Une ressource rare : le temps. Saturés de sollicitations et de lourdeur administrative — contrats de relations professionnelles, logistique d'événements.</p>
+          </div>
+          <div class="block">
+            <span class="k">Ce que l'IA change</span>
+            <p>Elle automatise la vérification de conformité et le pré-remplissage des contrats ; une convention passe <strong>de plusieurs semaines à quelques jours</strong>. Et elle pousse la bonne information scientifique <strong>au bon moment</strong>, plus d'e-mails génériques.</p>
+          </div>
+          <div class="block">
+            <span class="k">L'impact pour le client</span>
+            <p>Le soignant interagit avec un laboratoire qui <strong>respecte son temps</strong> — démarches simplifiées, chaque échange à réelle valeur scientifique, sans friction.</p>
+          </div>
+        </div>
+        <div class="frame">
+          <!-- TODO Jerome : capture/vidéo démo — next best content / contrat HCP pré-rempli -->
+          <div class="demo-ph" role="img" aria-label="Emplacement démo : information personnalisée et contrat HCP assisté">
+            <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+            <span class="demo-label">Démo · Engagement HCP personnalisé</span>
+            <span class="demo-hint">La bonne information au bon moment + contrat conforme pré-rempli</span>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer"><span class="brand">salesforce<span class="logo-dot">.</span></span><span>J&amp;J · DSC — Vision Client</span></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 5 · Axe Patient -->
+  <section class="slide light title-top-body-mid" id="s5" role="region" aria-label="Axe patient : optimiser le parcours de soin" tabindex="-1">
+    <div class="slide-safe">
+      <div>
+        <p class="eyebrow">Axe 3 · Le patient</p>
+        <h2>Optimiser le parcours de soin</h2>
+      </div>
+      <div class="axis-grid">
+        <div class="frame">
+          <!-- TODO Jerome : capture/vidéo démo — IA prédictive anticipant ruptures de parcours / stocks -->
+          <div class="demo-ph" role="img" aria-label="Emplacement démo : anticipation prédictive du parcours de soin">
+            <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+            <span class="demo-label">Démo · Parcours de soin anticipé</span>
+            <span class="demo-hint">L'IA prédictive + BI détectent les ruptures et tensions de stock en amont</span>
+          </div>
+        </div>
+        <div class="axis-copy">
+          <div class="chip-row">
+            <span class="sf-chip sf-chip-primary">Patient</span>
+            <span class="sf-chip sf-chip-primary">Équipes soignantes</span>
+            <span class="sf-chip sf-chip-primary">Business Intelligence</span>
+            <span class="sf-chip sf-chip-primary">Stratégie Hospitalière</span>
+          </div>
+          <div class="block">
+            <span class="k">Leur enjeu</span>
+            <p>Concevoir des parcours de soin sur-mesure, à impact réel sur la qualité de prise en charge. Pour cela, il faut savoir <strong>anticiper</strong>.</p>
+          </div>
+          <div class="block">
+            <span class="k">Ce que l'IA change</span>
+            <p>L'IA prédictive et la BI unissent leurs forces : en lisant les signaux faibles et l'évolution des pathologies sur les territoires, elles identifient <strong>en amont</strong> les ruptures de parcours et les besoins d'approvisionnement.</p>
+          </div>
+          <div class="block">
+            <span class="k">L'impact pour le client</span>
+            <p>Les équipes bénéficient de projets d'accompagnement clés en main, les tensions de stock sont anticipées, et le patient bénéficie d'une <strong>continuité de soin optimale</strong>.</p>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer"><span class="brand">salesforce<span class="logo-dot">.</span></span><span>J&amp;J · DSC — Vision Client</span></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 6 · Conclusion : rouages synchronisés -->
+  <section class="slide white title-top-body-mid" id="s6" role="region" aria-label="Conclusion : quatre métiers, une seule ambition" tabindex="-1">
+    <div class="slide-safe">
+      <div>
+        <p class="eyebrow">La conclusion</p>
+        <h2>Quatre métiers, une seule ambition : l'Excellence Client</h2>
+      </div>
+      <div class="cog-band">
+        <div class="cog-card">
+          <div class="icon" aria-hidden="true"><svg viewBox="0 0 40 40" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 32V20M16 32V12M24 32V22M32 32V8"/><path d="M6 36h30"/></svg></div>
+          <h3>Business Intelligence</h3>
+          <p>La donnée qui anticipe le parcours patient.</p>
+        </div>
+        <div class="cog-card">
+          <div class="icon" aria-hidden="true"><svg viewBox="0 0 40 40" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="20" cy="13" r="6"/><path d="M8 34c0-6.6 5.4-12 12-12s12 5.4 12 12"/></svg></div>
+          <h3>Stratégie Hospitalière</h3>
+          <p>Le temps rendu aux soignants, sur le terrain.</p>
+        </div>
+        <div class="cog-card">
+          <div class="icon" aria-hidden="true"><svg viewBox="0 0 40 40" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="20" cy="20" r="13"/><path d="M20 7v13l9 5"/></svg></div>
+          <h3>CoE Digital &amp; Data</h3>
+          <p>L'expérience client orchestrée, sans silos.</p>
+        </div>
+        <div class="cog-card">
+          <div class="icon" aria-hidden="true"><svg viewBox="0 0 40 40" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M31 8H9a3 3 0 00-3 3v18a3 3 0 003 3h22a3 3 0 003-3V11a3 3 0 00-3-3z"/><path d="M14 20l4 4 8-9"/></svg></div>
+          <h3>Événements / HCP</h3>
+          <p>La conformité au service de la relation.</p>
+        </div>
+      </div>
+      <blockquote>« Adopter l'IA, ce n'est pas changer votre manière de travailler en interne — c'est changer la vie de vos clients. »</blockquote>
+      <div class="slide-footer"><span class="brand">salesforce<span class="logo-dot">.</span></span><span>J&amp;J · DSC — Vision Client</span></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 7 · Closing -->
+  <section class="slide sf-hero-media" id="s7" role="region" aria-label="Enclenchons la dynamique ensemble" tabindex="-1">
+    <div class="overlay"></div>
+    <span class="orb a" aria-hidden="true"></span>
+    <span class="orb b" aria-hidden="true"></span>
+    <div class="content">
+      <p class="eyebrow">La clôture</p>
+      <h1>Devenir le partenaire de confiance de tout votre écosystème</h1>
+      <p class="lead">La rigueur pour les groupements, le temps pour les soignants, le parcours qu'ils méritent pour les patients. Par quel moment client commençons-nous ?</p>
+    </div>
+    <p class="hero-footer">Johnson &amp; Johnson Innovative Medicine &nbsp;·&nbsp; Salesforce</p>
+  </section>
+
+</main>
+
+<nav id="nav-rail" aria-label="Navigation des slides">
+  <a href="#s1" aria-label="Slide 1" aria-current="true"></a>
+  <a href="#s2" aria-label="Slide 2"></a>
+  <a href="#s3" aria-label="Slide 3"></a>
+  <a href="#s4" aria-label="Slide 4"></a>
+  <a href="#s5" aria-label="Slide 5"></a>
+  <a href="#s6" aria-label="Slide 6"></a>
+  <a href="#s7" aria-label="Slide 7"></a>
+</nav>
+
+<script>
+  (function () {
+    var deck = document.getElementById('deck');
+    var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+    var dots = Array.prototype.slice.call(document.querySelectorAll('#nav-rail a'));
+
+    if ('IntersectionObserver' in window) {
+      var obs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) {
+            var i = slides.indexOf(e.target);
+            dots.forEach(function (d, di) { d.setAttribute('aria-current', di === i ? 'true' : 'false'); });
+          }
+        });
+      }, { root: deck, threshold: 0.55 });
+      slides.forEach(function (s) { obs.observe(s); });
+    } else {
+      deck.addEventListener('scroll', function () {
+        var idx = Math.round(deck.scrollTop / window.innerHeight);
+        dots.forEach(function (d, di) { d.setAttribute('aria-current', di === idx ? 'true' : 'false'); });
+      });
+    }
+
+    dots.forEach(function (d) {
+      d.addEventListener('click', function (ev) {
+        ev.preventDefault();
+        var t = document.querySelector(d.getAttribute('href'));
+        if (t) { t.scrollIntoView({ behavior: 'smooth' }); t.focus({ preventScroll: true }); }
+      });
+    });
+
+    function go(dir) {
+      var current = Math.round(deck.scrollTop / window.innerHeight);
+      var next = Math.max(0, Math.min(slides.length - 1, current + dir));
+      slides[next].scrollIntoView({ behavior: 'smooth' });
+      slides[next].focus({ preventScroll: true });
+    }
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === 'ArrowRight') { e.preventDefault(); go(1); }
+      if (e.key === 'ArrowUp' || e.key === 'PageUp' || e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+    });
+  })();
+</script>
+
+</body>
+</html>
